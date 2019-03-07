@@ -39,9 +39,9 @@ idioma en que se quiere obtener la salida. Sus posibles valores son: 'EN'
 }
 \value{
 La función devuelve una lista con dos componentes:
-\item edTS: data.table con la serie de valores de las unidades para las 
+\item \code{edTS}: data.table con la serie de valores de las unidades para las 
 variables especificadas.
-\item Param: data.table con los parámetros utilizados en la fase transversal.
+\item \code{Param}: data.table con los parámetros utilizados en la fase transversal.
 }
 \description{
 \code{CheckFT} obtiene los parámetros de la fase transversal de la 
@@ -49,6 +49,6 @@ depuración selectiva
 }
 \examples{
 dontrun{
-}
 
+}
 }

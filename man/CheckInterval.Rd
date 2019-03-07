@@ -52,9 +52,9 @@ los controles de validación de la operación estadística considerada.}
 }
 \value{
 La función devuelve una lista con dos componentes:
-\item edTS: data.table con la serie de valores de las unidades para las 
+\item \code{edTS}: data.table con la serie de valores de las unidades para las 
 variables implicadas en los edits.
-\item edits: data.table con los intervalos de validación de cada Edit
+\item \code{edits}: data.table con los intervalos de validación de cada Edit
 consultado y los parámetros utilizados en su construcción: Pred (centro del
 intervalo), Pred_error (error de predicción de la variable), HRFactor (factor
 de amplitud) y Condicion (indicador de la aplicación o no del control.)

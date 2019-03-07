@@ -33,16 +33,16 @@
 #' (English) y 'SP' (Servicio Promotor) y su valor por defecto es 'EN'.
 #'
 #' @return La función devuelve una lista con dos componentes:
-#' \item edTS: data.table con la serie de valores de las unidades para las 
+#' \item \code{edTS}: data.table con la serie de valores de las unidades para las 
 #' variables especificadas.
-#' \item Param: data.table con los parámetros utilizados en la fase transversal.
+#' \item \code{Param}: data.table con los parámetros utilizados en la fase transversal.
 #' 
 #' @import data.table StQ
 #' 
 #' @examples
 #' dontrun{
-#'}
-#'
+#' 
+#' }
 #' @export
 CheckFT <- function(variables, units, edData, varParam, score, selInfo,
                     invTrans.List, dTrans.List, lang = 'EN') {
