@@ -1,0 +1,28 @@
+Package: SelEditMonitor
+Type: Package
+Title: Functions for selective editing
+Version: 0.1.0.9000
+Authors@R: c(
+    person("David", "Salgado", email = "david.salgado.fernandez@gmail.com", role = c("cre", "aut")),
+    person("Elisa", "Esteban", email = "elisa.esteban.segurado@gmail.com", role = "aut"),
+    person("Soledad", "Saldaña", email = "soledad.saldana.diaz@gmail.com", role = "aut"))
+Description: Definition of functions to monitor the results of the selective editing
+Depends:
+    R (>= 3.3.0)
+Imports:
+    data.table (>= 1.10.0),
+    RepoTime (>= 0.2.1),
+    StQ (>= 0.3.6)
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true
+Collate:
+    'CheckInterval.R'
+    'CheckFT.R'
+    'DerivL.R'
+    'DerivLTA.R'
+    'FlagMatrix.R'
+    'invL.R'
+    'invLTA.R'
+    'Validate.R'
+RoxygenNote: 6.0.1
