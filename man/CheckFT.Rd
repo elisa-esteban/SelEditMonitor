@@ -39,9 +39,11 @@ idioma en que se quiere obtener la salida. Sus posibles valores son: 'EN'
 }
 \value{
 La función devuelve una lista con dos componentes:
-\item \code{edTS}: data.table con la serie de valores de las unidades para las 
-variables especificadas.
-\item \code{Param}: data.table con los parámetros utilizados en la fase transversal.
+\itemize{
+ \item \code{edTS}: data.table con la serie de valores de las unidades para las 
+ variables especificadas.
+ \item \code{Param}: data.table con los parámetros utilizados en la fase transversal.
+}
 }
 \description{
 \code{CheckFT} obtiene los parámetros de la fase transversal de la 

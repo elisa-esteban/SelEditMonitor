@@ -45,12 +45,14 @@
 #' (English) y 'SP' (Servicio Promotor) y su valor por defecto es 'EN'.
 #'
 #' @return La función devuelve una lista con dos componentes:
-#' \item \code{edTS}: data.table con la serie de valores de las unidades para las 
-#' variables implicadas en los edits.
-#' \item \code{edits}: data.table con los intervalos de validación de cada Edit
-#' consultado y los parámetros utilizados en su construcción: Pred (centro del
-#' intervalo), Pred_error (error de predicción de la variable), HRFactor (factor
-#' de amplitud) y Condicion (indicador de la aplicación o no del control.)
+#' \itemize{
+#'  \item \code{edTS}: data.table con la serie de valores de las unidades para las 
+#'  variables implicadas en los edits.
+#'  \item \code{edits}: data.table con los intervalos de validación de cada Edit
+#'  consultado y los parámetros utilizados en su construcción: Pred (centro del
+#'  intervalo), Pred_error (error de predicción de la variable), HRFactor (factor
+#'  de amplitud) y Condicion (indicador de la aplicación o no del control.)
+#' }
 #' 
 #' @import data.table StQ
 #' 
