@@ -132,14 +132,16 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   Vars.aux <- unlist(variables[['VarAuxiliares']])
   if (is.null(Vars.aux)) Vars.aux <- ''
 
-  invTrans <- lapply(Edits, function(x){invTrans.List[[x]]})
-  dTrans <- lapply(Edits, function(x){dTrans.List[[x]]})
-  names(invTrans) <- Vars
-  names(dTrans) <- Vars  
+  invTrans <- lapply(names(Vars), function(x){invTrans.List[[x]]})
+  dTrans <- lapply(names(Vars), function(x){dTrans.List[[x]]})
   
-  Vars <- c(Vars, Vars.aux)
   Vars_R <- UnitToIDDDNames(Vars, DD)
   names(Vars) <- Vars_R
+  names(invTrans) <- Vars_R
+  names(dTrans) <- Vars_R
+  names(Vars.aux) <- UnitToIDDDNames(Vars.aux, DD)
+  Vars <- c(Vars, Vars.aux)
+  
   
   EdTS.dt <- edTS[IDDD %in% StQ::ExtractNames(Vars_R)]
   EdTS.dt <- dcast_StQ(EdTS.dt, StQ::ExtractNames(Vars_R))
@@ -291,11 +293,11 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   }
   
 
-  if (var %in% names(invTrans)) {
-    
+  for (var in names(invTrans)) {
+  
     if (!is.null(invTrans[[var]]) & !is.null(dTrans[[var]])) {
-      
-      EdTS.dt[, (paste0('f(', var, ')')) := invTrans[[var]](as.numeric(get(var)))]
+    
+      EdTS.dt[, (paste0('f(', var, ')')) := invTrans[[var]](as.numeric(get(Vars[var])))]
 
     
       for (col in c('LimInf', 'LimSup', 'Pred', 'Pred_Error', 'FF', 'FG')) {
