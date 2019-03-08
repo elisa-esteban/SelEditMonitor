@@ -17,20 +17,21 @@
 #'
 #' @export
 invLTA <- function(p, adjust = 1e-15, unit = 'degrees'){
-
+  
   if (length(adjust) != 1) stop('[invLTA] El parametro adjust debe tener longitud 1.')
-  if (!unit %chin% c('degrees', 'radians')) stop('[invLTA] Los valores validos para el parametro unit son: degrees, radians.')
+  if (!unit %in% c('degrees', 'radians')) stop('[invLTA] Los valores validos para el parametro unit son: degrees, radians.')
   if (adjust <= 0 | adjust > 0.5) stop('[invLTA] El parametro adjust debe ser un numero positivo y no mayor que 0.5') ## (0 <= a < 1)
   
   p <- as.numeric(p)
   a <- 1 - 2 * adjust
-
+  
   x <- 0.5 * (1 - (1 - exp(p)) / (a * (1 + exp(p))))
   x[x < 0] <- 0
   x <- sqrt(x)
   output <- numeric(length(x))
-  output[x < 1] <- acos(x[x < 1])
+  output[is.na(p)] <- NA
+  output[!is.na(p) & x < 1] <- acos(x[!is.na(x) & x < 1])
   if (unit == 'degrees') output <- output * 180 / pi
-
+  
   return(output)
 }

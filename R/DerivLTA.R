@@ -19,7 +19,7 @@
 DerivLTA <- function(p, adjust = 1e-15, unit = 'degrees'){
   
   if (length(adjust) !=1) stop('[DerivLTA] El parametro adjust debe tener longitud 1.')
-  if (!unit %chin% c('degrees', 'radians')) stop('[DerivLTA] Los valores validos para el parametro unit son: degrees, radians.')
+  if (!unit %in% c('degrees', 'radians')) stop('[DerivLTA] Los valores validos para el parametro unit son: degrees, radians.')
   if (adjust <= 0 | adjust > 0.5) stop('[DerivLTA] El parametro adjust debe ser un numero positivo y no mayor que 0.5') ## (0 <= a < 1)
   
   p <- as.numeric(p)
