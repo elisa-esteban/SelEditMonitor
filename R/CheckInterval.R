@@ -137,12 +137,12 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   
   Vars_R <- UnitToIDDDNames(Vars, DD)
   names(Vars) <- Vars_R
-  names(invTrans) <- Vars_R
-  names(dTrans) <- Vars_R
+  names(invTrans) <- Vars
+  names(dTrans) <- Vars
   names(Vars.aux) <- UnitToIDDDNames(Vars.aux, DD)
   Vars <- c(Vars, Vars.aux)
   
-  
+
   EdTS.dt <- edTS[IDDD %in% StQ::ExtractNames(Vars_R)]
   EdTS.dt <- dcast_StQ(EdTS.dt, StQ::ExtractNames(Vars_R))
   setkeyv(EdTS.dt, IDQuals)
@@ -292,26 +292,35 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
     
   }
   
-
-  for (var in names(invTrans)) {
   
-    if (!is.null(invTrans[[var]]) & !is.null(dTrans[[var]])) {
-    
-      EdTS.dt[, (paste0('f(', var, ')')) := invTrans[[var]](as.numeric(get(Vars[var])))]
+  for (var in names(invTrans)) {
 
+    if (!is.null(invTrans[[var]]) & !is.null(dTrans[[var]])) {
+   
+      EdTS.dt[, (paste0('f(', var, ')')) := invTrans[[var]](as.numeric(get(var)))]
+      
+    }}  
+  
+  if (any(!unlist(lapply(invTrans, is.null)))) {
     
+    output.list <- split(output, output[['NombreVariable']])
+  
+    lapply(names(output.list), function(Var) {
+   
       for (col in c('LimInf', 'LimSup', 'Pred', 'Pred_Error', 'FF', 'FG')) {
         
         if (col == 'Pred_Error') {
           
-          output[, (paste0('f(', col, ')')) := as.numeric(get(col)) / sqrt(abs(dTrans[[var]](invTrans[[var]](as.numeric(Pred)))))]
+          output.list[[Var]][, (paste0('f(', col, ')')) := ifelse(!is.null(invTrans[[Var]]), as.numeric(get(col)) / sqrt(abs(dTrans[[Var]](invTrans[[Var]](as.numeric(Pred))))), NA), by = 'NombreEdit']
           
         } else {
           
-          output[, (paste0('f(', col, ')')) := invTrans[[var]](as.numeric(get(col)))]
-        }  
+          output.list[[Var]][, (paste0('f(', col, ')')) := ifelse(!is.null(invTrans[[Var]]), invTrans[[Var]](as.numeric(get(col))), NA), by = 'NombreEdit']
+
+        }
       }
-    }
+    })
+    output <- rbindlist(output.list)
   }
   
   output <- merge(output, aux.dt, by = names(units))
