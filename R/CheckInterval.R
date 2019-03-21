@@ -100,8 +100,8 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   
   if (!all(edits %in% names(edit.List))) {
     
-    ifelse (lang == 'SP', stop('[ChekInterval] Los edits válidos para la encuesta ', Encuesta, 'son ', names(edit.List), '.\n\n'), 
-                          stop('[ChekInterval] Valid edits for survey ', Encuesta, 'are ', names(edit.List), '.\n\n'))
+    if (lang == 'SP') stop('[SelEditMonitor ChekInterval] Los edits válidos para la encuesta ', Encuesta, ' son ', paste0(names(edit.List), collapse = ','), '.\n\n')
+    else stop('[SelEditMonitor ChekInterval] Valid edits for survey ', Encuesta, ' are ', paste0(names(edit.List), collapse = ','), '.\n\n')
   }
   
   Edits <- toupper(edits)
@@ -110,15 +110,15 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   IDQuals <- setdiff(getIDQual(DD, 'MicroData'), c('Period'))
   if (dim(edTS.StQ[get(IDQuals) %in% Units[[names(Units)]]])[[1]] == 0) {
     
-    if (lang == 'SP') stop('[ChekInterval] Ninguna unidad especificada en el parámetro units pertenece a los datos del parámetro edTS.')
-    if (lang == 'EN') stop('[ChekInterval] No unit specified in the units parameter belongs to the data of the edTS parameter.')
+    if (lang == 'SP') stop('[SelEditMonitor ChekInterval] Ninguna unidad especificada en el parámetro units pertenece a los datos del parámetro edTS.')
+    else stop('[SelEditMonitor ChekInterval] No unit specified in the units parameter belongs to the edTS parameter data set.')
     
   }
  
   if (!identical(names(units), as.character(IDDDToUnitNames(IDQuals, DD)))) {
     
-    if (lang == 'SP') stop('[ChekInterval] Compruébense los nombres de las variables de identificación en el parámetro units.')
-    if (lang == 'EN') stop('[ChekInterval] Check the names of the identification variable in the units parameter.')
+    if (lang == 'SP') stop('[SelEditMonitor ChekInterval] Compruébense los nombres de las variables de identificación en el parámetro units.')
+    else stop('[SelEditMonitor ChekInterval] Check the names of the identification variable in the units parameter.')
     
   }
  
@@ -199,8 +199,8 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
     
     if (!identical(names(units), as.character(IDQuals_Unit))) {
       
-      ifelse (lang == 'SP', stop('[ChekInterval] Compruébense los nombres de las variables de identificación en el parámetro units.'),
-                            stop('[ChekInterval] Check the names of the identification variable in the units parameter.'))
+      if (lang == 'SP') stop('[SelEditMonitor ChekInterval] Compruébense los nombres de las variables de identificación en el parámetro units.')
+      else  stop('[SelEditMonitor ChekInterval] Check the names of the identification variable in the units parameter.')
     }
     aux.dt <- units
     edData.dt <- melt(units, id.vars = IDQuals_Unit, variable.name = 'variable')
@@ -239,7 +239,11 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
       
   } else {
       
-      if (names(units) != IDQuals_Unit) stop('Compruébense los nombres de las variables de identificación en el parámetro units.')
+      if (!identical(names(units), as.character(IDQuals_Unit))) {
+        
+        if (lang == 'SP') stop('[SelEditMonitor ChekInterval] Compruébense los nombres de las variables de identificación en el parámetro units..')
+        else  stop('[SelEditMonitor ChekInterval] Check the names of the identification variable in the units parameter.')
+      }
       rawData.dt <- melt(units, id.vars = IDQuals_Unit, variable.name = 'variable')
       setnames(rawData.dt, UnitToIDDDNames(names(rawData.dt), DD))
       for (var in names(Vars[!Vars %in% Vars.aux])){
@@ -334,7 +338,7 @@ CheckInterval <- function(variables, units, edit.List, edits = names(edit.list),
   # output <- output[, names(output) := lapply(.SD, function(x) {x[is.na(x)] <- "" ; x})] #Al hacer esto, las columnas numericas se convierten en caracter
   
   
-  if (lang == 'en') {
+  if (lang == 'EN') {
     
     setnames(output, 
              c('NombreVariable', 'NombreEdit', 'Condicion', 'LimInf', 'LimSup', 'Pred', 'Pred_Error', 'FF', 'FG'), 

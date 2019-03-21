@@ -64,7 +64,11 @@ CheckFT <- function(variables, units, edData, varParam, score, selInfo,
   setnames(units, IDQual)
   varParam.Data <- varParam.Data[units]
   varParam.dt <- dcast_StQ(varParam.Data)
-
+  if (is.null(varParam.dt) || dim(varParam.dt)[1] != dim(units)[1]) {
+    
+    if (lang == 'SP') stop('[SelEditMonitor CheckFT] Alguna de las unidades especificadas en el parametro units no pertenece al conjunto de datos del parametro varParam.')
+    else stop('[SelEditMonitor CheckFT] Any of the units specified in the units parameter does not belong to the varParam parameter data set.')
+  }
   
   #### Obtencion de datos historicos de las variables
   if (lang == 'SP') cat('Obteniendo el historico de las variables...\n\n')
