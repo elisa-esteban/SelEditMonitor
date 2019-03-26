@@ -1,4 +1,4 @@
-Validate <- function(Data, intervalData) {
+Validate <- function(Data, intervalData, variables) {
   
   DD.intData <- getDD(intervalData)
   IDQuals.intData <- getIDQual(DD.intData, 'ParaData')
@@ -8,7 +8,7 @@ Validate <- function(Data, intervalData) {
   setnames(intData, names(intData), IDDDToUnitNames(names(intData), DD.intData))
   intData[, NombreVariable := ifelse(!is.na(NombreVariable), IDDDToUnitNames(NombreVariable, DD), NombreVariable), by = 'NombreVariable']
   
-  if (dim(getData(Data))[[1]] > 0){
+  if (dim(getData(Data))[[1]] > 0) {
     
     DD.Data <- getDD(Data)
     IDQuals.Data <- IDDDToUnitNames(getIDQual(DD.Data, 'MicroData'), DD.Data)  
@@ -16,7 +16,9 @@ Validate <- function(Data, intervalData) {
     setnames(DT, names(DT), IDDDToUnitNames(names(DT), DD.Data))
     units <- DT[, IDQuals.Data, with = FALSE]
     intData <- merge(units, intData, by.x = IDQuals.Data, by.y = IDQuals.intData.unit, all.x = TRUE)
-    varNames <- setdiff(names(DT), IDQuals.Data)
+    varAnalisis <- unlist(variables$VarAnalisis)
+    varAuxiliares <- unlist(variables$VarAuxiliares)
+    varNames <- intersect(c(varAnalisis, varAuxiliares), names(DT))
 
     output.list <- lapply(varNames, function(varName){
       
@@ -33,20 +35,16 @@ Validate <- function(Data, intervalData) {
       setnames(intData.aux, 'varName', 'ValorVariable')
       return(intData.aux)
     })
-   
-    ncols <- unlist(lapply(output.list, ncol))
-    output.list <- split(output.list, ncols)
-    output <- output.list[[setdiff(names(output.list), '2')]]
-    output <- rbindlist(output)
-    output.aux <- output.list[['2']]
-    if (!is.null(output.aux)) {
-      
-      output.aux <- Reduce(merge, output.aux)
-      output <- merge(output, output.aux)
-      
-    }
+    names(output.list) <- varNames
     
-  }else {
+    output <- output.list[names(output.list) %in% varAnalisis]
+    output <- rbindlist(output)
+    output.aux <- output.list[names(output.list) %in% varAuxiliares]
+    output.aux <- rbindlist(output.aux)
+    if (dim(output.aux)[1] > 0) output <- merge(output, output.aux, by = IDQuals.intData.unit)
+    
+    
+  } else {
     
     varNames <- character(0)
     output <- intData[, ValorVariable := NA]
@@ -57,8 +55,12 @@ Validate <- function(Data, intervalData) {
 
   changeCols <- c('LimInf', 'LimSup', 'HRFactor')
   output[,(changeCols):= lapply(.SD, as.numeric), .SDcols = changeCols]
-  setcolorder(output, c(IDQuals.intData.unit, 'NombreVariable', 'NombreEdit', 'Flag', 'Condicion',  'LimInf', 'LimSup', 'ValorVariable', 'HRFactor', intersect(names(output), varNames)))
+  if (varAuxiliares %in% names(output))
+    setcolorder(output, c(IDQuals.intData.unit, 'NombreVariable', 'NombreEdit', 'Flag', 'Condicion',  'LimInf', 'LimSup', 'ValorVariable', 'HRFactor', varAuxiliares))
+  else
+    setcolorder(output, c(IDQuals.intData.unit, 'NombreVariable', 'NombreEdit', 'Flag', 'Condicion',  'LimInf', 'LimSup', 'ValorVariable', 'HRFactor'))
   output <- output[!is.na(NombreEdit)]
+  setkeyv(output, IDQuals.intData.unit)
   return(output)  
 
 }
