@@ -61,14 +61,15 @@ Validate <- function(Data, intervalData, variables, lang = 'EN') {
   IDQuals.intData <- getIDQual(DD.intData, 'ParaData')
   IDQuals.intData.unit <- IDDDToUnitNames(IDQuals.intData, DD.intData)
   
+  DD.Data <- getDD(Data)
+  IDQuals.Data <- IDDDToUnitNames(getIDQual(DD.Data, 'MicroData'), DD.Data)
+  
   intData <- dcast_StQ(intervalData)
   setnames(intData, names(intData), IDDDToUnitNames(names(intData), DD.intData))
-  intData[, NombreVariable := ifelse(!is.na(NombreVariable), IDDDToUnitNames(NombreVariable, DD.intData), NombreVariable), by = 'NombreVariable']
+  intData[, NombreVariable := ifelse(!is.na(NombreVariable), IDDDToUnitNames(NombreVariable, DD.Data), NombreVariable), by = 'NombreVariable']
   
   if (dim(getData(Data))[[1]] > 0) {
     
-    DD.Data <- getDD(Data)
-    IDQuals.Data <- IDDDToUnitNames(getIDQual(DD.Data, 'MicroData'), DD.Data)  
     DT <- dcast_StQ(Data)
     setnames(DT, names(DT), IDDDToUnitNames(names(DT), DD.Data))
     units <- DT[, IDQuals.Data, with = FALSE]
